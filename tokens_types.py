@@ -80,6 +80,26 @@ class EOF:
     pass
 
 
+identifier_types = {
+    "and": AND,
+    "class": CLASS,
+    "else": ELSE,
+    "false": FALSE,
+    "for": FOR,
+    "fun": FUN,
+    "if": IF,
+    "nil": NIL,
+    "or": OR,
+    "print": PRINT,
+    "return": RETURN,
+    "super": SUPER,
+    "this": THIS,
+    "true": TRUE,
+    "var": VAR,
+    "while": WHILE,
+}
+
+
 token_type = [
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
     COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,

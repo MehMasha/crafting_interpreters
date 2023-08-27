@@ -58,8 +58,12 @@ class Scanner:
             case '"':
                 self.is_string()
             case _:
-                self.errors.append((self.line, 'Это что за закорючка?'))
-        self.current += 1
+                if char.isdigit():
+                    self.is_number()
+                elif self.is_alpha(char):
+                    self.is_identifier()
+                else:
+                    self.errors.append((self.line, 'Это что за закорючка?'))
 
     def match(self, expected):
         if self.is_at_end():
@@ -85,7 +89,7 @@ class Scanner:
         if self.is_at_end():
             return '\0'
         return self.source[self.current]
-    
+
     def is_string(self):
         while self.get_peek() != '"' and not self.is_at_end():
             if self.get_peek() == '\n':
@@ -95,8 +99,40 @@ class Scanner:
         if self.is_at_end():
             self.errors(self.line, 'А строку и не закрыл')
             return
-        
+
         self.get_advance()
 
         value = self.source[self.start + 1:self.current - 1]
         self.add_token_literal(STRING, value)
+
+    def is_number(self):
+        while self.get_peek().isdigit():
+            self.get_advance()
+
+        next_char = self.get_peek()
+        if next_char == '.' and self.peek_next().isdigit():
+            self.get_advance()
+            while self.get_peek().isdigit():
+                self.get_advance()
+
+        self.add_token_literal(NUMBER, float(self.source[self.start:self.current]))
+
+    def peek_next(self):
+        if self.current + 1 >= len(self.source):
+            return '\0'
+        return self.source[self.current + 1]
+    
+    def is_identifier(self):
+        while self.is_alpha_num(self.get_peek()):
+            self.get_advance()
+
+        text = self.source[self.start:self.current]
+        if text in identifier_types:
+            self.add_token(identifier_types[text])
+        else:
+            self.add_token(IDENTIFIER)
+
+    def is_alpha(self, char):
+        return char.isalpha() or char == '_' 
+    def is_alpha_num(self, char):
+        return char.isalpha() or char == '_' or char.isdigit()

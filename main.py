@@ -2,8 +2,6 @@ import sys
 from scanner import Scanner
 
 
-
-
 class Interpreter:
     def __init__(self) -> None:
         self.had_error = False
@@ -34,9 +32,6 @@ class Interpreter:
     def report(self, line: int, where, message):
         print(f'line: {line}, error: {where} {message}')
         self.had_error = True
-
-
-
 
 
 if __name__ == '__main__':
